@@ -1,73 +1,77 @@
-# LAB-006 — Vulnversity | TryHackMe
+![FANTASMA | LAB-006-VULNVERSITY](05-Evidencias/portada-vulnversity.png)
 
-## Objetivo
-Laboratorio práctico de pentesting para preparación eJPT.
+# LAB-006-VULNVERSITY | TryHackMe
 
+**Autor:** FANTASMA  
 **Plataforma:** TryHackMe  
-**Máquina:** Vulnversity  
-**Sistema operativo:** Ubuntu Linux  
+**Objetivo:** Formación práctica eJPT  
 **Estado:** Completado
 
-## 1. Reconocimiento
+## Resumen ejecutivo
 
-Se realizó un escaneo TCP completo con Nmap.
+Evaluación de seguridad de la máquina Vulnversity en un entorno autorizado de TryHackMe.
 
-Puertos encontrados:
+Se identificó una vulnerabilidad en el formulario de subida de archivos que permitió ejecutar código PHP como `www-data`. Posteriormente, una configuración insegura del permiso SUID en `systemctl` permitió elevar privilegios hasta root.
 
-| Puerto | Servicio |
-|--------|----------|
-| 21 | FTP |
-| 22 | SSH |
-| 139 | NetBIOS |
-| 445 | SMB |
-| 3128 | Squid Proxy 4.10 |
-| 3333 | Apache HTTP |
+## Reconocimiento
 
-## 2. Enumeración web
+Se realizó un escaneo de puertos TCP con Nmap.
 
-Se identificó el directorio:
+- 21/TCP: FTP
+- 22/TCP: SSH
+- 139/TCP: NetBIOS
+- 445/TCP: SMB
+- 3128/TCP: Squid Proxy 4.10
+- 3333/TCP: Apache HTTP Server
 
-/internal/
+Evidencia: [Nmap](01-Reconocimiento/nmap-inicial.txt)
 
-Contenía un formulario de subida de archivos.
+## Enumeración web
 
-## 3. Vulnerabilidad identificada
+Mediante enumeración web se identificó el directorio `/internal/`, que contenía un formulario de subida de archivos.
 
-El formulario restringía archivos PHP convencionales,
-pero permitía la extensión .phtml.
+Evidencia: [Gobuster](02-Enumeracion-Web/gobuster-inicial.txt)
 
-Esto permitió demostrar ejecución remota de código
-con los permisos del usuario www-data.
+## Explotación
 
-## 4. Escalada de privilegios
+El formulario restringía la subida de archivos `.php`, pero aceptaba la extensión `.phtml`.
 
-Durante la enumeración de archivos SUID se identificó:
+Se confirmó ejecución de código PHP y acceso remoto con los permisos del usuario `www-data`.
 
-/bin/systemctl
+## Escalada de privilegios
 
-El ejecutable pertenecía a root y tenía SUID activado.
+La enumeración SUID identificó el ejecutable `/bin/systemctl`, propiedad de root.
 
-Se demostró que podía iniciar servicios con privilegios
-elevados y ejecutar comandos con EUID 0.
+Se verificó que podía iniciar servicios con privilegios elevados. Posteriormente se obtuvo una sesión con `euid=0(root)`.
 
-## 5. Resultado
+## Resultados
 
-- Acceso inicial: www-data
-- Escalada: SUID systemctl
-- Privilegios finales: root
-- Objetivo del laboratorio: completado
+| Objetivo | Resultado |
+|---|---|
+| Reconocimiento | Completado |
+| Enumeración web | Completado |
+| Ejecución remota de comandos | Confirmada |
+| Acceso como www-data | Confirmado |
+| Escalada a root | Confirmada |
+| Root Flag | Conseguida |
 
-## 6. Recomendaciones
+Las flags y los archivos de explotación no se publican.
 
-- Validar extensiones y contenido de archivos subidos.
-- Almacenar las subidas fuera del directorio web ejecutable.
-- Eliminar permisos SUID innecesarios.
-- Aplicar el principio de mínimo privilegio.
-- Auditar periódicamente los permisos del sistema.
+## Recomendaciones de seguridad
 
-## Aviso legal
+1. Validar extensiones, contenido y tipos de archivos en el servidor.
+2. Impedir la ejecución de scripts en directorios de subida.
+3. Aplicar el principio de mínimo privilegio.
+4. Eliminar permisos SUID innecesarios de herramientas administrativas.
+5. Auditar configuraciones y monitorizar eventos de seguridad.
 
-Práctica realizada exclusivamente en un entorno
-de entrenamiento autorizado de TryHackMe.
+## Referencias
 
-Las cargas útiles, credenciales y flags no se publican.
+- [TryHackMe — Vulnversity](https://tryhackme.com/room/vulnversity)
+- [GTFOBins — systemctl](https://gtfobins.github.io/gtfobins/systemctl/)
+
+---
+
+**FANTASMA | Ethical Hacking & Pentesting**
+
+*Práctica realizada exclusivamente en un entorno de laboratorio autorizado.*

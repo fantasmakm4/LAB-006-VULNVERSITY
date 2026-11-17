@@ -1,0 +1,1 @@
+# Nmap 7.98 scan initiated Tue Nov 17 11:49:24 2026 as: nmap -sV -sC -p- -T4 -oN 01-Escaneos/nmap-inicial.txt 10.65.145.89
