@@ -1,6 +1,5 @@
 ![FANTASMA - LAB-006-VULNVERSITY](04-Imagenes/LAB-006-VULNVERSITY.png)
 
-![FANTASMA | LAB-006-VULNVERSITY](05-Evidencias/portada-vulnversity.png)
 
 # LAB-006-VULNVERSITY | TryHackMe
 
