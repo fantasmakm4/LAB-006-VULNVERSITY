@@ -1,0 +1,15 @@
+*.ovpn
+*.key
+*.pem
+*.p12
+*.pcap
+*.pcapng
+*.phtml
+*.php
+*.html
+*.txt~
+cookies.txt
+.env
+privado/
+03-Explotacion/
+.gitignore~
